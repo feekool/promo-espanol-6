@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#0B0D12">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Feekool Português 🌙 — Тёмный форум для изучения португальского | Применение шаблона в реальном времени</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0B0D12;
+            --bg-card: #12151E;
+            --bg-hover: #1A1E2A;
+            --text-primary: #E8EAED;
+            --text-secondary: #8B95A5;
+            --accent: #00D4AA;
+            --accent-glow: rgba(0, 212, 170, 0.35);
+            --cta: #FF6B35;
+            --cta-hover: #E85A28;
+            --border: #2A2F3A;
+            --radius: 14px;
+            --radius-lg: 24px;
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.65;
+            scroll-behavior: smooth;
+            font-size: clamp(14px, 1.8vw, 16px);
+            overflow-x: hidden;
+        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 24px); }
+        
+        /* Header */
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+            padding: clamp(14px, 3.5vw, 20px) 0;
+            border-bottom: 1px solid var(--border);
+            gap: clamp(12px, 3vw, 16px);
+            position: sticky; top: 0;
+            background: rgba(11, 13, 18, 0.9);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+        }
+        .logo-area { display: flex; align-items: center; gap: clamp(12px, 3vw, 16px); min-width: 0; }
+        .brand-icon {
+            width: clamp(42px, 9vw, 48px); height: clamp(42px, 9vw, 48px);
+            background: linear-gradient(135deg, var(--accent), #00A888);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            color: #0B0D12; font-size: clamp(20px, 5.5vw, 26px); font-weight: 800;
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+        .brand h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.4rem, 4.2vw, 1.75rem);
+            font-weight: 700; color: var(--text-primary); line-height: 1.15;
+        }
+        .brand p { font-size: clamp(0.74rem, 2.3vw, 0.84rem); color: var(--text-secondary); font-weight: 500; }
+        .btn-group { display: flex; gap: clamp(10px, 2.5vw, 14px); flex-wrap: wrap; justify-content: flex-end; flex: 1; min-width: 0; }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: clamp(11px, 2.8vw, 13px) clamp(20px, 5vw, 26px);
+            border-radius: 9999px; font-weight: 600; text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: clamp(0.92rem, 2.9vw, 1rem); text-align: center;
+            min-height: 44px; min-width: 44px; white-space: nowrap; cursor: pointer;
+            border: 2px solid transparent; gap: 6px;
+        }
+        .btn-primary { background: var(--accent); color: #0B0D12; box-shadow: 0 4px 14px var(--accent-glow); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--accent-glow); }
+        .btn-outline { background: transparent; border-color: var(--border); color: var(--text-primary); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,212,170,0.08); transform: translateY(-1px); }
+        .btn-cta { background: var(--cta); color: white; box-shadow: 0 4px 14px rgba(255,107,53,0.35); font-weight: 700; }
+        .btn-cta:hover { background: var(--cta-hover); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(255,107,53,0.45); }
+        .btn-large { padding: clamp(14px, 3.5vw, 16px) clamp(28px, 7vw, 38px); font-size: clamp(0.98rem, 3.2vw, 1.06rem); }
+        .btn-full-mobile { width: 100%; max-width: 320px; }
+        
+        /* Hero */
+        .hero {
+            padding: clamp(50px, 11vw, 76px) 0 clamp(40px, 9vw, 54px);
+            text-align: center;
+            background: radial-gradient(circle at 50% 0%, rgba(0,212,170,0.15) 0%, transparent 60%);
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(18, 21, 30, 0.8); border: 1px solid var(--border);
+            padding: clamp(7px, 2vw, 9px) clamp(16px, 4vw, 20px);
+            border-radius: 9999px; font-weight: 600; font-size: clamp(0.86rem, 2.7vw, 0.96rem);
+            margin-bottom: clamp(20px, 5vw, 28px); color: var(--text-secondary);
+        }
+        .hero h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 7vw, 2.9rem); font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent) 100%);
+            background-clip: text; -webkit-background-clip: text; color: transparent;
+            margin-bottom: clamp(18px, 4.5vw, 26px); line-height: 1.15;
+        }
+        .hero p { font-size: clamp(1.02rem, 3.6vw, 1.18rem); color: var(--text-secondary); max-width: 760px; margin: 0 auto clamp(24px, 6vw, 34px); }
+        .hero-buttons { display: flex; flex-wrap: wrap; gap: clamp(12px, 3vw, 16px); justify-content: center; }
+        
+        /* Quick Access */
+        .quick-access {
+            display: flex; flex-wrap: wrap; gap: clamp(10px, 2.5vw, 14px); justify-content: center;
+            margin: clamp(24px, 6vw, 48px) 0;
+            padding: clamp(14px, 3.5vw, 18px);
+            background: var(--bg-card); border-radius: var(--radius-lg);
+            border: 1px solid var(--border); box-shadow: var(--shadow);
+        }
+        
+        /* Sections */
+        .section { padding: clamp(50px, 11vw, 76px) 0; }
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.55rem, 5.4vw, 2.1rem); font-weight: 700;
+            margin-bottom: clamp(24px, 6vw, 40px); text-align: center; color: var(--text-primary);
+        }
+        
+        /* Forum Showcase */
+        .showcase-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+            gap: clamp(22px, 5.5vw, 34px); margin-top: clamp(20px, 5vw, 32px);
+        }
+        .showcase-card {
+            background: var(--bg-card); border-radius: var(--radius-lg);
+            border: 1px solid var(--border); overflow: hidden;
+            transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .showcase-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.4); border-color: var(--accent); }
+        .showcase-header {
+            padding: clamp(18px, 4.5vw, 24px); border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .showcase-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: clamp(1.05rem, 3.3vw, 1.15rem); color: var(--text-primary); }
+        .showcase-badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; background: var(--accent); color: #0B0D12; font-weight: 700; }
+        .showcase-body { padding: clamp(18px, 4.5vw, 24px); }
+        .mock-thread {
+            background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px;
+            padding: 16px; margin-bottom: 16px;
+        }
+        .mock-user { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .mock-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #4A5568, #2D3748); }
+        .mock-username { font-size: 0.85rem; font-weight: 600; color: var(--accent); }
+        .mock-time { font-size: 0.75rem; color: var(--text-secondary); }
+        .mock-text { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
+        .mock-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+        .mock-tag { font-size: 0.72rem; padding: 4px 10px; background: rgba(0,212,170,0.12); color: var(--accent); border-radius: 6px; font-weight: 500; }
+        .showcase-card .btn { width: 100%; justify-content: center; margin-top: 8px; }
+        
+        /* Install Steps */
+        .steps {
+            background: var(--bg-card); border-radius: var(--radius-lg);
+            padding: clamp(26px, 6vw, 40px) clamp(22px, 5vw, 34px);
+            border: 1px solid var(--border); box-shadow: var(--shadow); margin-top: clamp(20px, 5vw, 32px);
+        }
+        .step-list { counter-reset: step; }
+        .step-item {
+            display: flex; gap: clamp(16px, 4vw, 22px); align-items: flex-start; counter-increment: step;
+            margin-bottom: clamp(20px, 5vw, 28px); position: relative; padding-left: clamp(24px, 6vw, 32px);
+        }
+        .step-item::before {
+            content: counter(step); position: absolute; left: 0; top: 2px;
+            width: clamp(34px, 8vw, 40px); height: clamp(34px, 8vw, 40px);
+            background: linear-gradient(135deg, var(--accent), #00A888);
+            color: #0B0D12; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: clamp(1rem, 3.2vw, 1.15rem);
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+        .step-text strong { display: block; font-size: clamp(1rem, 3.1vw, 1.08rem); margin-bottom: 6px; color: var(--text-primary); font-weight: 700; }
+        .step-text a { color: var(--accent); text-decoration: none; border-bottom: 2px dashed rgba(0,212,170,0.4); font-weight: 500; transition: border-bottom-style 0.2s; }
+        .step-text a:hover { border-bottom-style: solid; }
+        .alt-install {
+            background: rgba(255,107,53,0.08); border-radius: clamp(18px, 4.5vw, 26px);
+            padding: clamp(16px, 4vw, 22px); text-align: center; margin-top: clamp(26px, 6.5vw, 38px);
+            font-size: clamp(0.92rem, 2.9vw, 1rem); border-left: 4px solid var(--cta); color: var(--text-secondary);
+        }
+        .steps-cta { text-align: center; margin-top: clamp(24px, 6vw, 32px); }
+        
+        /* Features Grid */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: clamp(20px, 5vw, 32px); }
+        .feature-card {
+            background: var(--bg-card); border-radius: var(--radius-lg); padding: clamp(22px, 5vw, 28px);
+            border: 1px solid var(--border); text-align: center; transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .feature-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--accent); }
+        .feature-icon { font-size: clamp(2rem, 6vw, 2.4rem); margin-bottom: 14px; }
+        .feature-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.1rem, 3.4vw, 1.25rem); margin-bottom: 10px; color: var(--text-primary); }
+        .feature-card p { color: var(--text-secondary); font-size: clamp(0.88rem, 2.7vw, 0.96rem); line-height: 1.55; }
+        
+        /* CTA Block */
+        .cta-block {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0,212,170,0.06), rgba(255,107,53,0.06));
+            border-radius: var(--radius-lg); padding: clamp(42px, 10vw, 58px) clamp(24px, 5.5vw, 32px);
+            margin: clamp(28px, 7vw, 52px) 0; border: 1px solid var(--border);
+            position: relative; overflow: hidden;
+        }
+        .cta-block::before {
+            content: "🌙"; position: absolute; top: -20px; right: -20px; font-size: 6rem; opacity: 0.08; transform: rotate(15deg);
+        }
+        .cta-badge {
+            background: linear-gradient(135deg, var(--accent), #00A888);
+            color: #0B0D12; border-radius: 9999px; padding: clamp(9px, 2.4vw, 12px) clamp(18px, 4.5vw, 26px);
+            display: inline-flex; align-items: center; gap: 8px; margin-bottom: clamp(18px, 4.5vw, 26px);
+            font-weight: 700; font-size: clamp(0.9rem, 2.8vw, 1rem); box-shadow: 0 4px 16px var(--accent-glow);
+        }
+        .cta-block h3 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.45rem, 4.8vw, 1.9rem); margin-bottom: clamp(14px, 3.5vw, 20px); color: var(--text-primary); }
+        .cta-block p { max-width: 680px; margin: 0 auto clamp(24px, 6vw, 34px); font-size: clamp(1rem, 3.1vw, 1.06rem); color: var(--text-secondary); }
+        .cta-buttons { display: flex; flex-wrap: wrap; gap: clamp(12px, 3vw, 16px); justify-content: center; margin: clamp(18px, 4.5vw, 26px) 0; }
+        .cta-note {
+            background: var(--bg-card); border-radius: 9999px; padding: clamp(14px, 3.5vw, 18px) clamp(24px, 6vw, 32px);
+            max-width: 580px; margin: clamp(24px, 6vw, 38px) auto 0;
+            font-size: clamp(0.92rem, 2.9vw, 1rem); border: 1px solid var(--border);
+            color: var(--text-secondary); box-shadow: var(--shadow);
+        }
+        
+        /* Footer */
+        footer {
+            padding: clamp(36px, 8vw, 52px) 0 clamp(28px, 7vw, 44px);
+            text-align: center; color: var(--text-secondary); font-size: clamp(0.82rem, 2.4vw, 0.92rem); line-height: 1.7;
+            background: var(--bg-card); border-top: 1px solid var(--border);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0; margin-top: clamp(24px, 6vw, 44px);
+        }
+        footer a { color: var(--accent); text-decoration: none; font-weight: 600; border-bottom: 2px dashed rgba(0,212,170,0.4); transition: border-bottom-style 0.2s; }
+        footer a:hover { border-bottom-style: solid; }
+        
+        /* Mobile CTA */
+        .mobile-cta {
+            display: none; position: fixed; bottom: clamp(14px, 3.5vw, 22px);
+            left: clamp(14px, 3.5vw, 22px); right: clamp(14px, 3.5vw, 22px);
+            z-index: 999; padding: clamp(10px, 2.5vw, 14px); background: var(--bg-card);
+            border-radius: 18px; box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+            animation: slideUp 0.35s ease; border: 1px solid var(--border);
+        }
+        @keyframes slideUp { from { transform: translateY(110px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .mobile-cta .btn { width: 100%; padding: clamp(13px, 3.3vw, 15px); font-size: clamp(0.98rem, 3.1vw, 1.06rem); font-weight: 700; }
+        
+        /* PT phrase highlight */
+        .pt-phrase { font-style: italic; color: var(--accent); font-weight: 600; background: rgba(0,212,170,0.1); padding: 3px 8px; border-radius: 6px; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; align-items: stretch; text-align: center; }
+            .logo-area { justify-content: center; }
+            .btn-group { justify-content: center; flex: none; }
+            .hero-buttons .btn { flex: 1; min-width: 145px; }
+            .step-item { flex-direction: column; align-items: center; text-align: center; padding-left: 0; }
+            .step-item::before { position: relative; left: auto; top: auto; margin-bottom: 12px; }
+            .cta-buttons .btn { flex: 1; min-width: 165px; max-width: 290px; }
+        }
+        @media (max-width: 480px) {
+            .btn-group { width: 100%; }
+            .btn-group .btn { flex: 1; min-width: 0; font-size: 0.9rem; padding: 10px 16px; }
+            .hero h2 { font-size: 1.8rem; }
+            .section-title { font-size: 1.45rem; }
+            .showcase-grid { grid-template-columns: 1fr; }
+            .quick-access { flex-direction: column; }
+            .quick-access .btn { width: 100%; }
+        }
+        @media (max-width: 768px) { .mobile-cta { display: block; } .desktop-only { display: none; } }
+        @media (min-width: 769px) { .mobile-only { display: none; } }
+        
+        /* Accessibility */
+        .btn:focus, a:focus, button:focus, .filter-btn:focus { outline: 3px solid var(--accent); outline-offset: 3px; }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <nav class="navbar" aria-label="Основная навигация">
+        <div class="logo-area">
+            <div class="brand-icon" aria-hidden="true">🌙</div>
+            <div class="brand">
+                <h1>Feekool Português</h1>
+                <p>тёмный режим • фокус • погружение</p>
+            </div>
+        </div>
+        <div class="btn-group">
+            <a href="https://feekool.github.io" target="_blank" class="btn btn-outline" aria-label="Открыть демо">👁️ Демо</a>
+            <a href="#contact" class="btn btn-primary">✉️ Начать</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-badge">🌙 Тёмный режим для вечерних занятий • ⚡ Готов за 60 сек</div>
+        <h2 id="hero-title">Учи португальский без усталости глаз.<br>Форум, который дышит с тобой.</h2>
+        <p>Тёмная тема снижает нагрузку, повышает концентрацию и создаёт атмосферу глубокого погружения. Идеально для репетиторов, самостоятельных учеников и ночных практиков. <span class="pt-phrase">Boa noite e bons estudos!</span></p>
+        
+        <div class="hero-buttons">
+            <a href="https://feekool.github.io" target="_blank" class="btn btn-primary btn-large btn-full-mobile">🌑 Открыть демо в тёмном режиме</a>
+            <a href="https://github.com/feekool/feekool.github.io" target="_blank" class="btn btn-cta btn-large btn-full-mobile">📥 Скачать шаблон</a>
+        </div>
+    </section>
+
+    <!-- Quick Access -->
+    <div class="quick-access" role="navigation" aria-label="Быстрые ссылки">
+        <a href="#showcase" class="btn btn-outline">🖥️ Как выглядит</a>
+        <a href="#install" class="btn btn-outline">⚙️ Установка</a>
+        <a href="#why" class="btn btn-outline">💡 Почему тёмный?</a>
+        <a href="https://feekool.github.io" target="_blank" class="btn btn-outline">👁️ Живое демо</a>
+    </div>
+
+    <!-- Forum Showcase -->
+    <section class="section" id="showcase" aria-labelledby="showcase-title">
+        <h2 id="showcase-title" class="section-title">🖥️ Как шаблон форума выглядит в реальном обучении</h2>
+        <p style="text-align: center; color: var(--text-secondary); max-width: 700px; margin: -20px auto 24px; line-height: 1.6;">
+            Каждый блок — готовое применение шаблона. Скопируй, адаптируй, запусти. Никакой верстки с нуля.
+        </p>
+        
+        <div class="showcase-grid">
+            <!-- Mock 1: Vocabulário -->
+            <article class="showcase-card">
+                <div class="showcase-header">
+                    <h3 class="showcase-title">📖 Vocabulário Visual</h3>
+                    <span class="showcase-badge">A1-A2</span>
+                </div>
+                <div class="showcase-body">
+                    <div class="mock-thread">
+                        <div class="mock-user">
+                            <div class="mock-avatar"></div>
+                            <div><span class="mock-username">@maria_luiza</span> <span class="mock-time">• 2ч назад</span></div>
+                        </div>
+                        <p class="mock-text">Как правильно использовать <em>"saudade"</em> в контексте? Поделитесь примерами! 👇</p>
+                        <div class="mock-tags"><span class="mock-tag">#palavra-da-semana</span><span class="mock-tag">#gramatica</span></div>
+                    </div>
+                    <div class="mock-thread">
+                        <div class="mock-user">
+                            <div class="mock-avatar" style="background: linear-gradient(135deg, var(--accent), #00A888)"></div>
+                            <div><span class="mock-username" style="color: var(--accent)">@admin_prof</span> <span class="mock-time">• 45 мин назад</span></div>
+                        </div>
+                        <p class="mock-text">✅ Отличная тема! Вот 5 предложений с контекстом и аудио-произношением...</p>
+                        <div class="mock-tags"><span class="mock-tag">#resposta</span><span class="mock-tag">#audio</span></div>
+                    </div>
+                    <a href="https://feekool.github.io" target="_blank" class="btn btn-outline">👁️ Посмотреть в демо</a>
+                </div>
+            </article>
+
+            <!-- Mock 2: Conversação -->
+            <article class="showcase-card">
+                <div class="showcase-header">
+                    <h3 class="showcase-title">🎙️ Sala de Conversação</h3>
+                    <span class="showcase-badge">B1-B2</span>
+                </div>
+                <div class="showcase-body">
+                    <div class="mock-thread">
+                        <div class="mock-user">
+                            <div class="mock-avatar"></div>
+                            <div><span class="mock-username">@bruno_sp</span> <span class="mock-time">• 1ч назад</span></div>
+                        </div>
+                        <p class="mock-text">Тема недели: <strong>"Se eu pudesse mudar uma coisa no Brasil..."</strong> Запиши голосовой ответ (до 2 мин)!</p>
+                        <div class="mock-tags"><span class="mock-tag">#desafio</span><span class="mock-tag">#falar</span><span class="mock-tag">#condicional</span></div>
+                    </div>
+                    <div class="mock-thread">
+                        <div class="mock-user">
+                            <div class="mock-avatar" style="background: linear-gradient(135deg, var(--cta), #E85A28)"></div>
+                            <div><span class="mock-username" style="color: var(--cta)">@aluna_ana</span> <span class="mock-time">• 20 мин назад</span></div>
+                        </div>
+                        <p class="mock-text">🎵 [Голосовое сообщение: 1:42] + транскрипция и фидбек от преподавателя</p>
+                        <div class="mock-tags"><span class="mock-tag">#pratica</span><span class="mock-tag">#feedback</span></div>
+                    </div>
+                    <a href="https://feekool.github.io" target="_blank" class="btn btn-outline">👁️ Посмотреть в демо</a>
+                </div>
+            </article>
+
+            <!-- Mock 3: Gramática -->
+            <article class="showcase-card">
+                <div class="showcase-header">
+                    <h3 class="showcase-title">📐 Gramática Interativa</h3>
+                    <span class="showcase-badge">A2-C1</span>
+                </div>
+                <div class="showcase-body">
+                    <div class="mock-thread">
+                        <div class="mock-user">
+                            <div class="mock-avatar"></div>
+                            <div><span class="mock-username">@profe_carlos</span> <span class="mock-time">• 3ч назад</span></div>
+                        </div>
+                        <p class="mock-text">Разбор: <em>Presente do Subjuntivo</em> vs <em>Indicativo</em>. Когда использовать каждый? Таблица-шпаргалка внутри 📊</p>
+                        <div class="mock-tags"><span class="mock-tag">#teoria</span><span class="mock-tag">#exercicios</span><span class="mock-tag">#tabela</span></div>
+                    </div>
+                    <div class="mock-thread">
+                        <div class="mock-user">
+                            <div class="mock-avatar" style="background: linear-gradient(135deg, #8B5CF6, #6D28D9)"></div>
+                            <div><span class="mock-username" style="color: #8B5CF6">@dev_student</span> <span class="mock-time">• 1ч назад</span></div>
+                        </div>
+                        <p class="mock-text">Сделал мини-тест! 8/10. Не понял разницу в 3 и 7 предложениях. Помогите разобраться 🔍</p>
+                        <div class="mock-tags"><span class="mock-tag">#duvida</span><span class="mock-tag">#quiz</span></div>
+                    </div>
+                    <a href="https://feekool.github.io" target="_blank" class="btn btn-outline">👁️ Посмотреть в демо</a>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Installation -->
+    <section class="section" id="install" aria-labelledby="install-title">
+        <h2 id="install-title" class="section-title">⚡ Как запустить тёмный форум за 1 минуту</h2>
+        <div class="steps">
+            <ol class="step-list">
+                <li class="step-item">
+                    <div class="step-text"><strong>1. GitHub аккаунт</strong> Создай профиль на <a href="https://github.com" target="_blank">github.com</a> (бесплатно)</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-text"><strong>2. Шаблон</strong> Перейди: <a href="https://github.com/feekool/feekool.github.io" target="_blank">github.com/feekool/feekool.github.io</a></div>
+                </li>
+                <li class="step-item">
+                    <div class="step-text"><strong>3. Копируй</strong> Нажми <strong>"Use this template"</strong> → <strong>"Create a new repository"</strong>. Назови, например, <span class="pt-phrase">"portugues-dark"</span></div>
+                </li>
+                <li class="step-item">
+                    <div class="step-text"><strong>4. GitHub Pages</strong> Settings → Pages → ветка <strong>main</strong> → Save. Через 30-60 сек форум онлайн!</div>
+                </li>
+                <li class="step-item">
+                    <div class="step-text"><strong>5. Настрой</strong> Открой `theme.css` → переключи переменные на тёмные. Готово. Пригласи учеников.</div>
+                </li>
+            </ol>
+            
+            <div class="alt-install">
+                💡 <strong>Pro tip:</strong> Хочешь кастомную тёмную тему под свой бренд? <a href="https://github.com/feekool/feekool.github.io/issues" target="_blank">Напиши в Issues</a> — соберём персональный CSS.
+            </div>
+            
+            <div class="steps-cta">
+                <a href="https://feekool.github.io" target="_blank" class="btn btn-primary btn-large btn-full-mobile" style="margin-bottom: 14px;">👁️ Посмотреть демо</a><br>
+                <a href="https://github.com/feekool/feekool.github.io" target="_blank" class="btn btn-cta btn-large btn-full-mobile">⚡ Создать форум сейчас</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Dark -->
+    <section class="section" id="why" aria-labelledby="why-title">
+        <h2 id="why-title" class="section-title">💡 Почему тёмный режим ускоряет обучение</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🌙</div>
+                <h3>Меньше усталости</h3>
+                <p>Снижает нагрузку на глаза при вечерних занятиях. Мозг сохраняет энергию на запоминание, а не на борьбу с ярким светом.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Фокус на контенте</h3>
+                <p>Тёмный фон убирает визуальный шум. Текст, аудио-кнопки и грамматические таблицы выделяются четче.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Быстрая загрузка</h3>
+                <p>Тёмные интерфейсы требуют меньше графических ресурсов. Форум грузится мгновенно даже на 3G.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Экономия батареи</h3>
+                <p>На OLED-экранах тёмные пиксели отключены. Ученики могут практиковаться дольше без подзарядки.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-block" id="contact" aria-labelledby="cta-title">
+        <div class="cta-badge">🌙 <span class="pt-phrase">Vamos começar!</span> Погрузись в язык</div>
+        <h3 id="cta-title">Твой форум уже готов. Осталось начать.</h3>
+        <p>Не жди идеального момента. Скопируй шаблон, переключи тему, добавь первую тему для обсуждения. <span class="pt-phrase">Cada noite é uma nova oportunidade de aprender.</span></p>
+        
+        <div class="cta-buttons">
+            <a href="https://feekool.github.io" target="_blank" class="btn btn-primary btn-large">🌑 Открыть демо</a>
+            <a href="https://feekool.github.io" target="_blank" class="btn btn-outline btn-large">👁️ Предпросмотр</a>
+            <a href="https://github.com/feekool/feekool.github.io/issues" target="_blank" class="btn btn-cta btn-large">💬 Бесплатная настройка</a>
+        </div>
+        
+        <div class="cta-note">
+            ⚡ <strong>Помощь в запуске:</strong> Напишите нам — поможем настроить тёмную тему, добавить разделы под ваш уровень и запустить первую практику уже сегодня. <span class="pt-phrase">Estamos aqui para você!</span>
+        </div>
+    </section>
+
+    <!-- Final buttons -->
+    <div style="display: flex; justify-content: center; gap: clamp(14px, 3.5vw, 26px); flex-wrap: wrap; margin: clamp(20px, 5vw, 46px) 0;" role="navigation" aria-label="Основные действия">
+        <a href="https://feekool.github.io" target="_blank" class="btn btn-primary btn-large">🎯 Демо-форум 🇧🇷</a>
+        <a href="https://feekool.github.io" target="_blank" class="btn btn-outline btn-large">👁️ Предпросмотр</a>
+        <a href="https://github.com/feekool/feekool.github.io" target="_blank" class="btn btn-cta btn-large">🐙 GitHub репозиторий</a>
+    </div>
+
+    <footer>
+        <p>© Feekool Português — тёмный форум для изучения языка на GitHub Pages.<br>
+        Open-source база + полная кастомизация под онлайн-школы, репетиторов, ночные клубы.</p>
+        <p style="margin-top: 14px; font-weight: 500;">🌙 Без серверов • Без подписок • Только фокус и прогресс</p>
+        <p style="margin-top: 14px;">
+            <a href="https://feekool.github.io" target="_blank">👁️ Открыть демо и начать сейчас</a> • 
+            <span class="pt-phrase" style="margin-left: 8px; font-weight: 600;">Boa noite e bons estudos! 📖✨</span>
+        </p>
+    </footer>
+</div>
+
+<!-- Mobile CTA -->
+<div class="mobile-cta" role="navigation" aria-label="Быстрый старт">
+    <a href="https://feekool.github.io" target="_blank" class="btn btn-primary" aria-label="Открыть демо-версию форума">
+        🌑 Открыть тёмный форум
+    </a>
+</div>
+
+<!-- Scripts -->
+<script>
+    (function() {
+        const mobileCta = document.querySelector('.mobile-cta');
+        if (mobileCta) {
+            let lastScroll = 0;
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                if (currentScroll > 300 && currentScroll > lastScroll) {
+                    mobileCta.style.transform = 'translateY(0)';
+                    mobileCta.style.opacity = '1';
+                } else if (currentScroll < 120) {
+                    mobileCta.style.transform = 'translateY(110px)';
+                    mobileCta.style.opacity = '0';
+                }
+                lastScroll = currentScroll;
+            }, { passive: true });
+        }
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    })();
+</script>
+
+<!-- Schema.org -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Feekool Português Dark",
+  "description": "Тёмный форум для изучения португальского языка. Снижает усталость глаз, повышает фокус, экономит батарею. Готовый шаблон на GitHub Pages с настройкой за 1 минуту.",
+  "applicationCategory": "LanguageLearningPlatform",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "RUB"
+  },
+  "url": "https://feekool.github.io",
+  "inLanguage": ["ru", "pt", "pt-BR", "pt-PT"],
+  "keywords": ["португальский язык", "тёмная тема", "языковой форум", "онлайн-курсы", "вечернее обучение", "фокус", "GitHub Pages"]
+}
+</script>
+</body>
+</html>
